@@ -30,63 +30,23 @@
 	<link rel="stylesheet" href="bolt/css/nav.css" />
 	<link rel="stylesheet" href="bolt/css/space.css" />
 	<link rel="stylesheet" href="bolt/css/action.css" />
-
-	<link href='https://fonts.googleapis.com/css?family=Inconsolata:400,700' rel='stylesheet' type='text/css'>
-
-	<style>
-		body {
-			/* Insist that body fills the window */
-			min-height: 100%;
-			height: 100%;
-		}
-
-		.name-layer,
-		.textarea-layer {
-			padding-left: 1.5625rem;
-			padding-right: 1.5625rem;
-		}
-
-		.name-layer {
-			position: fixed;
-			font-family: Inconsolata, Courier, monospace;
-			font-weight: 700;
-			line-height: 2.5rem;
-			bottom: auto;
-			height: 2.5rem;
-			border-width: 0 !important;
-			box-shadow: none !important;
-		}
-
-		.textarea-layer,
-		.textarea-layer:focus {
-			position: fixed;
-			font-family: Inconsolata, Courier, monospace;
-			font-weight: 400;
-			white-space: pre-wrap;
-			line-height: 1.5rem;
-			color: #421F2B;
-
-			top: 2.5rem;
-			margin-top: 0;
-			border-width: 0 !important;
-			border-top: 1px solid #dddddd !important;
-			box-shadow: none !important;
-			transition: border-color 140ms linear;
-		}
-
-		.textarea-layer.requested,
-		.textarea-layer.requested:focus {
-			border-color: #E8702E !important;
-		}
-	</style>
+	<link rel="stylesheet" href="css/dom.css" />
+	<link href='https://fonts.googleapis.com/css?family=Inconsolata:400,700' rel='stylesheet' />
 </head>
 
-<body>
-	<input type="text" class="name-layer layer" placeholder="Name..." name="{[data.name]}" value="" maxlength="128" id="name" />
-	<textarea class="textarea-layer layer {[requested|yesno:'requested']}" id="text" placeholder="" name="{[data.text]}"></textarea>
+<body id="body" class="{[data.html-active|yesno:'html-active']}">
+	<input type="text" class="name-layer layer {[requested|yesno: 'requested']}" placeholder="Name..." name="{[data.name]}" value="" maxlength="128" />
+	<label class="html-button button" for="html-toggle">
+		HTML
+		<input type="checkbox" class="masked" id="html-toggle" name="{[data.html-active]} "/>
+	</label>
+	<button type="button" class="delete-button {[requested|yesno: 'disabled']}" data-fn="delete-on-click">Delete</button>
+	<textarea class="text-layer layer" placeholder="" name="{[data.text]}"></textarea>
+	<div class="html-layer layer" data-scope="{[data.text]}" data-fn="html"></div>
 	<script src="bolt/js/jquery-2.1.4.js"></script>
 	<script src="bolt/package/js/bolt-0.9.8.js"></script>
 	<script src="sparky/package/sparky.js"></script>
+	<script src="sparky/js/sparky.fn.js"></script>
 	<script src="js/config.js"></script>
 	<script>
 (function(window) {
@@ -96,11 +56,13 @@
 	var slugify = Sparky.filters.slugify;
 
 	var path = '/jotter/';
+	var rallspaces =  /^\s*$/;
 
 	var data = {
 		slug: '',
 		name: '',
-		text: ''
+		text: '',
+		'html-active': false
 	};
 
 	var scope = {
@@ -108,12 +70,23 @@
 	};
 
 	var title = Sparky('title', data, returnScope);
-	var name = Sparky('name', data, returnScope);
-	var editor = Sparky('text', data, returnScope);
-	var rallspaces =  /^\s*$/;
+	var editor = Sparky('body', data, function(){
+		assign(this.fn, {
+			'delete-on-click': deleteOnClick
+		});
+
+		return scope;
+	});
 
 	function returnScope() {
 		return scope;
+	}
+
+	function deleteOnClick(node) {
+		node.addEventListener('click', function(e) {
+			storage.removeItem(data.slug);
+			load();
+		});
 	}
 
 	function getLocalDocuments() {
@@ -161,7 +134,7 @@
 		data.slug = slugify(data.name);
 		storage.setItem(data.slug, JSON.stringify(data));
 		console.log('Saved', path + data.slug);
-        window.history.pushState(data, data.name, path + data.slug);
+		window.history.pushState(data, data.name, path + data.slug);
 		scope.requested = false;
 	}, 500);
 
@@ -172,6 +145,7 @@
 		Sparky.unobserve(data, 'name', load);
 		Sparky.unobserve(data, 'text', save);
 		Sparky.unobserve(data, 'text', update);
+		Sparky.unobserve(data, 'html-active', save);
 
 		if (json) {
 			console.log('Loaded', path + slugify(data.name));
@@ -181,12 +155,14 @@
 			scope.requested = true;
 			data.text = '';
 			data.slug = '';
+			data['html-active'] = false;
 		}
 
 		Sparky.observe(data, 'name', save, false);
 		Sparky.observe(data, 'name', load, false);
 		Sparky.observe(data, 'text', save, false);
 		Sparky.observe(data, 'text', update, false);
+		Sparky.observe(data, 'html-active', save, false);
 	}, 100);
 
 	load();
@@ -194,6 +170,38 @@
 	window.documents = getLocalDocuments();
 	window.data = data;
 })(this);
+	</script>
+	<script src="upup.min.js"></script>
+	<script>
+	UpUp.start({
+		'content-url': 'index.html',
+		'assets': [
+			"bolt/css/normalise.css",
+			"bolt/css/form.css",
+			"bolt/css/block.css",
+			"bolt/css/card.css",
+			"bolt/css/index.css",
+			"bolt/css/layer.css",
+			"bolt/css/button.css",
+			"bolt/css/thumb.css",
+			"bolt/css/grid.css",
+			"bolt/css/text.css",
+			"bolt/css/color.css",
+			"bolt/css/utilities.css",
+			"bolt/css/dom.css",
+			"bolt/css/nav.css",
+			"bolt/css/space.css",
+			"bolt/css/action.css",
+			"css/dom.css",
+			"https://fonts.googleapis.com/css?family=Inconsolata:400,700",
+
+			"bolt/js/jquery-2.1.4.js",
+			"bolt/package/js/bolt-0.9.8.js",
+			"upup.min.js",
+			"sparky/package/sparky.js",
+			"js/config.js"
+		]
+	});
 	</script>
 </body>
 </html>
