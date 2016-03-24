@@ -6,7 +6,7 @@
 	<meta name="description" content="" />
 	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-	<title>Bolt</title>
+	<title id="title">Jotter :: {[data.name]}</title>
 
 	<!-- Bolt requires this. -->
 	<script>document.documentElement.className = 'js';</script>
@@ -38,6 +38,12 @@
 			/* Insist that body fills the window */
 			min-height: 100%;
 			height: 100%;
+		}
+
+		.name-layer,
+		.textarea-layer {
+			padding-left: 1.5625rem;
+			padding-right: 1.5625rem;
 		}
 
 		.name-layer {
@@ -77,7 +83,7 @@
 
 <body>
 	<input type="text" class="name-layer layer" placeholder="Name..." name="{[data.name]}" value="" maxlength="128" id="name" />
-	<textarea class="textarea-layer layer {[requested|yesno:'requested']}" id="text" placeholder="Text..." name="{[data.text]}"></textarea>
+	<textarea class="textarea-layer layer {[requested|yesno:'requested']}" id="text" placeholder="" name="{[data.text]}"></textarea>
 	<script src="bolt/js/jquery-2.1.4.js"></script>
 	<script src="bolt/package/js/bolt-0.9.8.js"></script>
 	<script src="sparky/package/sparky.js"></script>
@@ -89,7 +95,7 @@
 	var storage = window.localStorage;
 	var slugify = Sparky.filters.slugify;
 
-	var path = '/notes/';
+	var path = '/jotter/';
 
 	var data = {
 		slug: '',
@@ -101,6 +107,7 @@
 		data: data
 	};
 
+	var title = Sparky('title', data, returnScope);
 	var name = Sparky('name', data, returnScope);
 	var editor = Sparky('text', data, returnScope);
 	var rallspaces =  /^\s*$/;
