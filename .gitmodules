@@ -1,3 +1,6 @@
 [submodule "bolt"]
 	path = bolt
 	url = /Users/stephband/Sites/bolt
+[submodule "sparky"]
+	path = sparky
+	url = /Users/stephband/Sites/sparky
