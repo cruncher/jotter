@@ -36,7 +36,7 @@
 </head>
 
 <body id="body" class="{[data.html-active|yesno:'html-active']} {[requested|yesno: 'unsaved']}">
-	<input type="text" class="name-layer layer" placeholder="Name ✎" name="{[data.name]}" value="" maxlength="128" />
+	<input type="text" class="name-layer layer" placeholder="✎ Title" name="{[data.name]}" value="" maxlength="128" />
 	<label class="html-button button" for="html-toggle">
 		HTML
 		<input type="checkbox" class="masked" id="html-toggle" name="{[data.html-active]} "/>
@@ -83,6 +83,39 @@
 
 	function returnScope() {
 		return scope;
+	}
+
+	function setupStorage(storage) {
+		if (!storage.getItem('')) {
+
+			storage.setItem('', JSON.stringify({
+				slug: '',
+				name: '',
+				text: 'This is Jotter.\n\n' +
+					'To show a jot enter it\'s name in the title bar.\n' +
+					'To create or edit the jot, start typing.\n' +
+					'Jots are saved locally as you type.\n\n' +
+					'Type \'index\' for a jot that lists your jots.\n',
+				'html-active': false
+			}));
+		}
+
+		if (!storage.getItem('index')) {
+			storage.setItem('index', JSON.stringify({
+				slug: 'index',
+				name: 'Index',
+				text: '<h1 class="text-2">Jots</h1>\n\n' +
+					'<ul class="index">\n' +
+					'  <li>\n' +
+					'    <a href="./">Home</a>\n' +
+					'  </li>\n' +
+					'  <li data-scope="{[jots]}" data-fn="each">\n' +
+					'    <a href="{[slug]}">{[name]}</a>\n' +
+					'  </li>\n' +
+					'</ul>\n',
+				'html-active': true
+			}));
+		}
 	}
 
 	function deleteOnClick(node) {
@@ -192,6 +225,7 @@
 		Sparky.observe(data, 'html-active', save, false);
 	}, 100);
 
+	setupStorage(storage);
 	load();
 
 	window.jots = getLocalJots();
