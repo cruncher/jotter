@@ -1,6 +1,6 @@
 [submodule "bolt"]
 	path = bolt
-	url = /Users/stephband/Sites/bolt
+	url = https://github.com/stephband/bolt.git
 [submodule "sparky"]
 	path = sparky
-	url = /Users/stephband/Sites/sparky
+	url = https://github.com/cruncher/sparky.git
