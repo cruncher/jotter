@@ -1,0 +1,35 @@
+/* Placeholders. */
+::-webkit-input-placeholder {
+	font-style: normal;
+	font-weight: normal;
+	line-height: inherit;
+	color: #cccccc;
+}
+
+::-moz-placeholder {
+	font-style: normal;
+	font-weight: normal;
+	line-height: inherit;
+	color: #cccccc;
+}
+
+:-ms-input-placeholder {
+	font-style: normal;
+	font-weight: normal;
+	line-height: inherit;
+	color: #cccccc;
+}
+
+::-ms-input-placeholder {
+	font-style: normal;
+	font-weight: normal;
+	line-height: inherit;
+	color: #cccccc;
+}
+
+:placeholder-shown {
+	font-style: normal;
+	font-weight: normal;
+	line-height: inherit;
+	color: #cccccc;
+}
