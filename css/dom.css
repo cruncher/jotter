@@ -2,6 +2,7 @@ body {
 	/* Insist that body fills the window */
 	min-height: 100%;
 	height: 100%;
+	overflow: hidden;
 }
 
 body > .name-layer,
@@ -108,7 +109,7 @@ body.unsaved > .button {
 	position: fixed;
 	font-family: Inconsolata, Courier, monospace;
 	font-weight: 400;
-	white-space: pre-wrap;
+	white-space: pre;
 	line-height: 1.5rem;
 	color: #421F2B;
 
@@ -124,7 +125,7 @@ body.unsaved > .button {
 .html-layer {
 	top: 2.5rem;
 	left: auto;
-	width: 37.5%;
+	width: 100%;
 	height: auto;
 	padding-top: 1.875rem;
 	padding-bottom: 2.5rem;
@@ -147,5 +148,25 @@ body.unsaved > .button {
 
 .html-active > .text-layer {
 	right: auto;
-	width: 62.5%;
+	width: 0%;
+}
+
+@media screen and (min-width: 50em) {
+	.html-layer {
+		width: 37.5%;
+	}
+
+	.js .html-active > .text-layer {
+		width: 62.5%;
+	}
+}
+
+@media screen and (min-width: 80em) {
+	.html-layer {
+		width: 50%;
+	}
+
+	.js .html-active > .text-layer {
+		width: 50%;
+	}
 }

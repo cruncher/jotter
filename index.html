@@ -36,13 +36,13 @@
 </head>
 
 <body id="body" class="{[data.html-active|yesno:'html-active']} {[requested|yesno: 'unsaved']}">
-	<input type="text" class="name-layer layer" placeholder="✎ Name" name="{[data.name]}" value="" maxlength="128" />
+	<input type="text" class="name-layer layer" placeholder="Name ✎" name="{[data.name]}" value="" maxlength="128" />
 	<label class="html-button button" for="html-toggle">
 		HTML
 		<input type="checkbox" class="masked" id="html-toggle" name="{[data.html-active]} "/>
 	</label>
 	<button type="button" class="delete-button {[requested|yesno: 'disabled']}" data-fn="delete-on-click">Delete</button>
-	<textarea class="text-layer layer" placeholder="✎" name="{[data.text]}"></textarea>
+	<textarea class="text-layer layer hidden-scroll" placeholder="✎" name="{[data.text]}"></textarea>
 	<div class="html-layer layer" data-scope="{[data.text]}" data-fn="sparkify"></div>
 	<script src="bolt/js/jquery-2.1.4.js"></script>
 	<script src="bolt/package/js/bolt-0.9.8.js"></script>
