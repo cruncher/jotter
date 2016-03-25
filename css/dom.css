@@ -36,17 +36,14 @@ body > .html-button { right: 4.5rem; }
 	color: white;
 }
 
-.delete-button {
-	background-color: #cccccc;
-}
-
 .delete-button:hover,
 .delete-button:focus {
-	background-color: #E8702E;
+	background-color: #D0866A;
 }
 
+.delete-button,
 .delete-button.disabled {
-	background-color: #dddddd;
+	background-color: #cccccc;
 }
 
 .html-button {
@@ -62,7 +59,7 @@ body > .html-button { right: 4.5rem; }
 .html-button.on {
 	color: black;
 	background-color: white;
-	box-shadow: -1px 0 0 #dddddd !important;
+	border-left: 1px solid #dddddd !important;
 }
 
 label,
@@ -99,8 +96,10 @@ button:focus {
 	box-shadow: none !important;
 }
 
-.name-layer.requested,
-.name-layer.requested:focus {
+body.unsaved > .name-layer,
+body.unsaved > .text-layer,
+body.unsaved > .html-layer,
+body.unsaved > .button {
 	border-color: #E8702E !important;
 }
 

@@ -6,7 +6,7 @@
 	<meta name="description" content="" />
 	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-	<title id="title">Jotter :: {[data.name]}</title>
+	<title id="title">Jotter{[data.name|yesno:' ✎ ']}{[data.name]}</title>
 
 	<!-- Bolt requires this. -->
 	<script>document.documentElement.className = 'js';</script>
@@ -30,23 +30,25 @@
 	<link rel="stylesheet" href="bolt/css/nav.css" />
 	<link rel="stylesheet" href="bolt/css/space.css" />
 	<link rel="stylesheet" href="bolt/css/action.css" />
+	<link rel="stylesheet" href="css/form.css" />
 	<link rel="stylesheet" href="css/dom.css" />
 	<link href='https://fonts.googleapis.com/css?family=Inconsolata:400,700' rel='stylesheet' />
 </head>
 
-<body id="body" class="{[data.html-active|yesno:'html-active']}">
-	<input type="text" class="name-layer layer {[requested|yesno: 'requested']}" placeholder="Name..." name="{[data.name]}" value="" maxlength="128" />
+<body id="body" class="{[data.html-active|yesno:'html-active']} {[requested|yesno: 'unsaved']}">
+	<input type="text" class="name-layer layer" placeholder="✎ Name" name="{[data.name]}" value="" maxlength="128" />
 	<label class="html-button button" for="html-toggle">
 		HTML
 		<input type="checkbox" class="masked" id="html-toggle" name="{[data.html-active]} "/>
 	</label>
 	<button type="button" class="delete-button {[requested|yesno: 'disabled']}" data-fn="delete-on-click">Delete</button>
-	<textarea class="text-layer layer" placeholder="" name="{[data.text]}"></textarea>
-	<div class="html-layer layer" data-scope="{[data.text]}" data-fn="html"></div>
+	<textarea class="text-layer layer" placeholder="✎" name="{[data.text]}"></textarea>
+	<div class="html-layer layer" data-scope="{[data.text]}" data-fn="sparkify"></div>
 	<script src="bolt/js/jquery-2.1.4.js"></script>
 	<script src="bolt/package/js/bolt-0.9.8.js"></script>
 	<script src="sparky/package/sparky.js"></script>
 	<script src="sparky/js/sparky.fn.js"></script>
+	<script src="sparky/js/sparky.filters.js"></script>
 	<script src="js/config.js"></script>
 	<script>
 (function(window) {
@@ -72,7 +74,8 @@
 	var title = Sparky('title', data, returnScope);
 	var editor = Sparky('body', data, function(){
 		assign(this.fn, {
-			'delete-on-click': deleteOnClick
+			'delete-on-click': deleteOnClick,
+			'sparkify': sparkify
 		});
 
 		return scope;
@@ -89,15 +92,39 @@
 		});
 	}
 
-	function getLocalDocuments() {
+	function sparkify(node) {
+		var content;
+		var fns = this.interrupt();
+
+		this.on('scope', function(sparky, html) {
+			if (content) { content.destroy(); }
+			content = undefined;
+
+			if (!html) { return; }
+
+			var template = Sparky.dom.create('div');
+			template.innerHTML = html;
+
+			content = sparky.create(template, undefined, function(node) {
+				return {
+					barf: 'Barf!',
+					jots: getLocalJots()
+				};
+			});
+
+			Sparky.dom.append(node, content);
+		});
+	}
+
+	function getLocalJots() {
 		var array = [];
 		var slug;
 
 		for (slug in storage) {
-			array.push(storage[slug]);
+			array.push(JSON.parse(storage[slug]));
 		}
 
-		Collection(array, { index: 'slug' });
+		return Collection(array, { index: 'slug' });
 	}
 
 	function update(){
@@ -133,7 +160,7 @@
 
 		data.slug = slugify(data.name);
 		storage.setItem(data.slug, JSON.stringify(data));
-		console.log('Saved', path + data.slug);
+		console.log('Saved', data.slug);
 		window.history.pushState(data, data.name, path + data.slug);
 		scope.requested = false;
 	}, 500);
@@ -148,7 +175,7 @@
 		Sparky.unobserve(data, 'html-active', save);
 
 		if (json) {
-			console.log('Loaded', path + slugify(data.name));
+			console.log('Loaded', slugify(data.name));
 			assign(data, JSON.parse(json));
 		}
 		else {
@@ -167,7 +194,7 @@
 
 	load();
 
-	window.documents = getLocalDocuments();
+	window.jots = getLocalJots();
 	window.data = data;
 })(this);
 	</script>
@@ -192,6 +219,7 @@
 			"bolt/css/nav.css",
 			"bolt/css/space.css",
 			"bolt/css/action.css",
+			"css/form.css",
 			"css/dom.css",
 			"https://fonts.googleapis.com/css?family=Inconsolata:400,700",
 
