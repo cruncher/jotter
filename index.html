@@ -106,11 +106,8 @@
 				name: 'Index',
 				text: '<h1 class="text-2">Jots</h1>\n\n' +
 					'<ul class="index">\n' +
-					'  <li>\n' +
-					'    <a href="./">/</a>\n' +
-					'  </li>\n' +
 					'  <li data-scope="{[jots]}" data-fn="each">\n' +
-					'    <a href="{[slug]}">{[name]}</a>\n' +
+					'    <a href="{[slug]}">{[name]}{[name|yesno:"","/"]}</a>\n' +
 					'  </li>\n' +
 					'</ul>\n',
 				'html-active': true
@@ -151,10 +148,10 @@
 
 	function getLocalJots() {
 		var array = [];
-		var slug;
+		var n = storage.length;
 
-		for (slug in storage) {
-			array.push(JSON.parse(storage[slug]));
+		while (n--) {
+			array.push(JSON.parse(storage.getItem(storage.key(n))));
 		}
 
 		return Collection(array, { index: 'slug' });
