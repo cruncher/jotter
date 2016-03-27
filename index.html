@@ -46,6 +46,7 @@
 	<div class="html-layer layer" data-scope="{[data.text]}" data-fn="sparkify"></div>
 	<script src="bolt/js/jquery-2.1.4.js"></script>
 	<script src="bolt/package/js/bolt-0.9.8.js"></script>
+	<script src="showdown/dist/showdown.js"></script>
 	<script src="sparky/package/sparky.js"></script>
 	<script src="sparky/js/sparky.fn.js"></script>
 	<script src="sparky/js/sparky.filters.js"></script>
@@ -54,6 +55,7 @@
 (function(window) {
 	var assign = Object.assign;
 	var Sparky = window.Sparky;
+	var dom = Sparky.dom;
 	var storage = window.localStorage;
 	var slugify = Sparky.filters.slugify;
 
@@ -92,7 +94,7 @@
 				slug: '',
 				name: '',
 				text: 'This is Jotter.\n\n' +
-					'To show a jot enter it\'s name in the title bar.\n' +
+					'To show a jot enter it\'s name in the ✎ Title bar.\n' +
 					'To create or edit the jot, start typing.\n' +
 					'Jots are saved locally as you type.\n\n' +
 					'Type \'index\' for an html jot that lists your jots.\n',
@@ -123,26 +125,41 @@
 	}
 
 	function sparkify(node) {
-		var content;
+		var child;
 		var fns = this.interrupt();
 
 		this.on('scope', function(sparky, html) {
-			if (content) { content.destroy(); }
-			content = undefined;
+			if (child) { child.destroy(); }
+			child = undefined;
 
 			if (!html) { return; }
 
-			var template = Sparky.dom.create('div');
-			template.innerHTML = html;
+			var converter = new showdown.Converter();
+			var template = dom.create('template', converter.makeHtml(html));
+			var content = dom.fragmentFromContent(template);
 
-			content = sparky.create(template, undefined, function(node) {
+			// Futile attempt to prevent against attacks. I'm sure this is
+			// horribly naive.
+			dom.remove(content.querySelectorAll('html'));
+			dom.remove(content.querySelectorAll('head'));
+			dom.remove(content.querySelectorAll('body'));
+			dom.remove(content.querySelectorAll('script'));
+			dom.remove(content.querySelectorAll('embed'));
+			dom.remove(content.querySelectorAll('object'));
+			dom.remove(content.querySelectorAll('link'));
+			dom.remove(content.querySelectorAll('meta'));
+
+			var div = Sparky.dom.create('div', '');
+			dom.append(div, content);
+
+			child = sparky.create(div, undefined, function(node) {
 				return {
 					barf: 'Barf!',
 					jots: getLocalJots()
 				};
 			});
 
-			Sparky.dom.append(node, content);
+			Sparky.dom.append(node, child);
 		});
 	}
 
