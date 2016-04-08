@@ -44,6 +44,18 @@
 	<button type="button" class="delete-button {[requested|yesno: 'disabled']}" data-fn="delete-on-click">Delete</button>
 	<textarea class="text-layer layer hidden-scroll" placeholder="✎" name="{[data.text]}"></textarea>
 	<div class="html-layer layer" data-scope="{[data.text]}" data-fn="sparkify"></div>
+	<script>
+	if (navigator.serviceWorker) {
+		if (navigator.serviceWorker.controller) {
+			console.log('Service worker found.');
+		}
+		else {
+			console.log('Register service worker');
+			navigator.serviceWorker.register('service-worker.js');
+		}
+	}
+	else { alert('Navigator does not support Service Worker.'); }
+	</script>
 	<script src="bolt/js/jquery-2.1.4.js"></script>
 	<script src="bolt/package/js/bolt-0.9.8.js"></script>
 	<script src="showdown/dist/showdown.js"></script>
@@ -53,38 +65,5 @@
 	<script src="sparky/plugins/sparky.fn.suggest.js"></script>
 	<script src="js/config.js"></script>
 	<script src="js/jotter.js"></script>
-	<script src="upup.min.js"></script>
-	<script>
-	UpUp.start({
-		'content-url': 'index.html',
-		'assets': [
-			"bolt/css/normalise.css",
-			"bolt/css/form.css",
-			"bolt/css/block.css",
-			"bolt/css/card.css",
-			"bolt/css/index.css",
-			"bolt/css/layer.css",
-			"bolt/css/button.css",
-			"bolt/css/thumb.css",
-			"bolt/css/grid.css",
-			"bolt/css/text.css",
-			"bolt/css/color.css",
-			"bolt/css/utilities.css",
-			"bolt/css/dom.css",
-			"bolt/css/nav.css",
-			"bolt/css/space.css",
-			"bolt/css/action.css",
-			"css/form.css",
-			"css/dom.css",
-			"https://fonts.googleapis.com/css?family=Inconsolata:400,700",
-
-			"bolt/js/jquery-2.1.4.js",
-			"bolt/package/js/bolt-0.9.8.js",
-			"upup.min.js",
-			"sparky/package/sparky.js",
-			"js/config.js"
-		]
-	});
-	</script>
 </body>
 </html>
