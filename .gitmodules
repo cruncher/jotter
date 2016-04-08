@@ -4,3 +4,6 @@
 [submodule "sparky"]
 	path = sparky
 	url = https://github.com/cruncher/sparky.git
+[submodule "toolbox"]
+	path = toolbox
+	url = https://github.com/GoogleChrome/sw-toolbox.git
