@@ -1,6 +1,6 @@
 importScripts('toolbox/sw-toolbox.js');
 
-toolbox.options.debug = true;
+//toolbox.options.debug = true;
 
 toolbox.precache([
 	"index.html",
@@ -12,6 +12,7 @@ toolbox.precache([
 	"bolt/css/index.css",
 	"bolt/css/layer.css",
 	"bolt/css/button.css",
+	"bolt/css/bubble.css",
 	"bolt/css/thumb.css",
 	"bolt/css/grid.css",
 	"bolt/css/text.css",
@@ -21,6 +22,7 @@ toolbox.precache([
 	"bolt/css/nav.css",
 	"bolt/css/space.css",
 	"bolt/css/action.css",
+	"css/bubble.css",
 	"css/form.css",
 	"css/dom.css",
 
@@ -60,11 +62,11 @@ toolbox.router.get(/\/jotter\/[\w\-]+\.json$/, function(request) {
 toolbox.router.get(/\/fonts.googleapis.com\//, toolbox.cacheFirst);
 toolbox.router.get(/\/fonts.gstatic.com\//, toolbox.cacheFirst);
 
-toolbox.router.get(/\/bolt\//, toolbox.cacheOnly);
-toolbox.router.get(/\/sparky\//, toolbox.cacheOnly);
-toolbox.router.get(/\/showdown\//, toolbox.cacheOnly);
-toolbox.router.get(/\/css\//, toolbox.cacheOnly);
-toolbox.router.get(/\/js\//, toolbox.cacheOnly);
+toolbox.router.get(/\/bolt\//, toolbox.cacheFirst);
+toolbox.router.get(/\/sparky\//, toolbox.cacheFirst);
+toolbox.router.get(/\/showdown\//, toolbox.cacheFirst);
+toolbox.router.get(/\/css\//, toolbox.cacheFirst);
+toolbox.router.get(/\/js\//, toolbox.cacheFirst);
 
 toolbox.router.get(/\/jotter\/[\w\-]*$/, function(request) {
 	return self.caches.match('index.html');

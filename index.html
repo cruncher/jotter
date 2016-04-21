@@ -21,6 +21,7 @@
 	<link rel="stylesheet" href="bolt/css/index.css" />
 	<link rel="stylesheet" href="bolt/css/layer.css" />
 	<link rel="stylesheet" href="bolt/css/button.css" />
+	<link rel="stylesheet" href="bolt/css/bubble.css" />
 	<link rel="stylesheet" href="bolt/css/thumb.css" />
 	<link rel="stylesheet" href="bolt/css/grid.css" />
 	<link rel="stylesheet" href="bolt/css/text.css" />
@@ -30,13 +31,14 @@
 	<link rel="stylesheet" href="bolt/css/nav.css" />
 	<link rel="stylesheet" href="bolt/css/space.css" />
 	<link rel="stylesheet" href="bolt/css/action.css" />
+	<link rel="stylesheet" href="css/bubble.css" />
 	<link rel="stylesheet" href="css/form.css" />
 	<link rel="stylesheet" href="css/dom.css" />
 	<link href='https://fonts.googleapis.com/css?family=Inconsolata:400,700' rel='stylesheet' />
 </head>
 
 <body id="body" class="{[data.html-active|yesno:'html-active']} {[requested|yesno: 'unsaved']}">
-	<input type="text" class="name-layer layer" placeholder="✎ Title" name="{[data.name]}" value="" maxlength="128" />
+	<input data-fn="suggest" type="text" class="name-layer layer" placeholder="✎ Title" name="{[data.name]}" value="" maxlength="128" data-suggest-data="{[jots]}" data-suggest-template="jots-template" data-suggest-value="{[name]}" />
 	<label class="html-button button" for="html-toggle">
 		HTML
 		<input type="checkbox" class="masked" id="html-toggle" name="{[data.html-active]} "/>
@@ -44,6 +46,17 @@
 	<button type="button" class="delete-button {[requested|yesno: 'disabled']}" data-fn="delete-on-click">Delete</button>
 	<textarea class="text-layer layer hidden-scroll" placeholder="✎" name="{[data.text]}"></textarea>
 	<div class="html-layer layer" data-scope="{[data.text]}" data-fn="sparkify"></div>
+
+	<template id="jots-template">
+		<div class="jots-bubble bottom-bubble bubble tip">
+			<ul class="menu-index index">
+				<li data-fn="each">
+					<button class="menu-button button" data-fn="store-scope">{[name]} <small>{[text.length]} chars</small></button>
+				</li>
+			</ul>
+		</div>
+	</template>
+
 	<script>
 	if (navigator.serviceWorker) {
 		if (navigator.serviceWorker.controller) {

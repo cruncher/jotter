@@ -61,6 +61,8 @@
 				'html-active': true
 			}));
 		}
+
+		scope.jots = getLocalJots();
 	}
 
 	function deleteOnClick(node) {
