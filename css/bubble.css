@@ -1,0 +1,28 @@
+
+.menu-index > li > .button {
+	width: 100%;
+}
+
+.menu-button.focus {
+	background-color: rgba(0,0,180,0.04);
+}
+
+.bubble {
+	padding-left: 0.9375rem;
+	padding-right: 0.9375rem;
+	color: #546978;
+	border-color: #dddddd;
+	background-color: #eeeeee;
+	border-radius: 0.1875rem;
+}
+
+.bubble > .menu-index {
+	max-height: 80vh;
+	overflow: auto;
+}
+
+.js .bottom-bubble {
+	margin-top: 1.125rem;
+}
+
+.jots-bubble { margin-left: 11.5625rem; }
